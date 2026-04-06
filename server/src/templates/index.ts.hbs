@@ -1,0 +1,10 @@
+import express from 'express';
+const app = express();
+
+app.listen({{PORT}}, () => {
+console.log('Server running on port {{PORT}}');
+});
+
+{{#if ENABLE_LOGGING}}
+console.log('Logging is enabled');
+{{/if}}

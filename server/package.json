@@ -1,0 +1,44 @@
+{
+  "name": "zero-engine",
+  "version": "1.0.0",
+  "description": "A config-driven backend generator that allows developers to define models, features, and structure in a simple config file, and automatically generates a complete, scalable backend (APIs, controllers, routes, and core logic) with zero repetitive coding.",
+  "keywords": [
+    "zero",
+    "zero engine",
+    "backend generator",
+    "CLI",
+    "nodejs"
+  ],
+  "license": "ISC",
+  "author": "RAJ MOVALIYA",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "zero": "dist/bin/zero.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node --esm bin/zero.ts",
+    "start": "node dist/bin/zero.js",
+    "lint": "prettier --check '**/*.{ts,js,json,md}'",
+    "format": "prettier --write '**/*.{ts,js,json,md}'"
+  },
+  "dependencies": {
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
+    "commander": "^14.0.3",
+    "dotenv": "^17.4.1",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "handlebars": "^4.7.9",
+    "js-yaml": "^4.1.1",
+    "prettier": "^3.8.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  }
+}
