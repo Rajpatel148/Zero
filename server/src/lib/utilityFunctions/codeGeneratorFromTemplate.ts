@@ -5,7 +5,7 @@ import Handlebars from 'handlebars';
 type TemplateGeneratorOptions<T> = {
      templatePath: string;   
      outputPath: string;     
-     context: T;             
+     context?: T;             
 };
 
 export const generateFromTemplate = <T>({

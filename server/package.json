@@ -17,7 +17,8 @@
     "zero": "dist/bin/zero.js"
   },
   "scripts": {
-    "build": "tsc",
+    "copy-templates": "node scripts/copy-templates.cjs",
+    "build": "tsc && npm run copy-templates",
     "dev": "ts-node --esm bin/zero.ts",
     "start": "node dist/bin/zero.js",
     "lint": "prettier --check '**/*.{ts,js,json,md}'",
@@ -38,6 +39,7 @@
     "@types/express": "^5.0.6",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.5.2",
+    "copyfiles": "^2.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2"
   }

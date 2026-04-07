@@ -1,8 +1,10 @@
-import express from 'express';
-const app = express();
+import app from './app'
 
-app.listen({{PORT}}, () => {
-console.log('Server running on port {{PORT}}');
+const PORT = process.env.PORT || {{PORT}};
+const HOST = '127.0.0.1';
+
+app.listen(Number(PORT), HOST, () => {
+console.log(`Server listening on ${HOST}:${PORT}`);
 });
 
 {{#if ENABLE_LOGGING}}

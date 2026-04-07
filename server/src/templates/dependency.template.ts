@@ -1,5 +1,5 @@
 export const dependecyList: readonly string[] = [
-     "express","dotenv",
+     "express","dotenv","prisma"
 ] as const;
 
 export const devDependecyList: readonly string[] = [
@@ -7,4 +7,5 @@ export const devDependecyList: readonly string[] = [
      "ts-node",
      "@types/node",
      "@types/express",
+     "@prisma/client",
 ] as const;

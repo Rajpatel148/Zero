@@ -8,8 +8,8 @@ export let OUTPUT_PATH : string;
 export const zeroEngine = async (config : AppConfig) =>{
      let processFlag = true;
      //create the output folder with name of the project name 
-     processFlag = folderGenerator("Zero",BASE_PATH);
-     OUTPUT_PATH = path.join(BASE_PATH,"Zero");
+     processFlag = folderGenerator("server",BASE_PATH);
+     OUTPUT_PATH = path.join(BASE_PATH,"server");
 
      if(processFlag == false){
           process.exit(1);

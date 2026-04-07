@@ -1,0 +1,35 @@
+import express from 'express';
+import cors from 'cors';
+import { createResponse } from './utils/apiResponse';
+import compression from 'compression';
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
+// Apply compression middleware
+app.use(
+compression({
+level: 6, // Compression level (0-9)
+threshold: 1024, // Compress only if response is > 1KB
+filter: (req, res) => {
+// Custom filter
+if (req.headers['x-no-compression']) {
+return false; // Don't compress if header exists
+}
+return compression.filter(req, res);
+},
+}),
+);
+
+app.get('/', (req, res) => {
+res.json({ messaage: 'hello world from Zero' });
+});
+
+app.use((req, res) => {
+res.status(404).json(createResponse(false, req.url + ' Not Found', null));
+});
+
+export default app;
