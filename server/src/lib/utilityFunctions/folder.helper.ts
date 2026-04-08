@@ -3,15 +3,13 @@ import fs from "fs"
 
 
 export const folderGenerator = (folderName: string,
-     folderPath: string) : boolean=> {
+     folderPath: string) => {
      try {
           const fullPath = path.join(folderPath, folderName);
 
           fs.mkdirSync(fullPath, { recursive: true });
-
-          return true;
      } catch (error) {
-          console.error('Error creating folder : ', error);
-          return false;
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          throw new Error(`Failed to create folder at ${path.join(folderPath, folderName)}: ${errorMessage}`);
      }
 }

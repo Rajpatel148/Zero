@@ -1,0 +1,56 @@
+generator client {
+provider = "prisma-client-js"
+}
+
+datasource db {
+provider = "{{database.provider}}"
+url = env("DATABASE_URL")
+}
+
+{{#each models}}
+model {{@key}} {
+{{#if this.table}}
+@@map("{{this.table}}")
+{{/if}}
+
+{{#each this.fields}}
+{{@key}} {{mapType this.type}}{{#unless (or this.required this.primary)}}?{{/unless}}
+{{~#if this.primary}} @id @default(uuid()){{/if}}
+{{~#if this.unique}} @unique{{/if}}
+{{~#if (and this.default (not this.auto))}} @default({{{this.default}}}){{/if}}
+{{/each}}
+
+{{#each this.relations}}
+{{#if (eq this.type "many-to-one")}}
+{{this.foreignKey}} String
+{{@key}} {{this.target}} @relation(fields: [{{this.foreignKey}}], references: [id])
+{{else if (eq this.type "one-to-many")}}
+{{@key}} {{this.target}}[]
+{{else if (eq this.type "one-to-one")}}
+{{this.foreignKey}} String @unique
+{{@key}} {{this.target}} @relation(fields: [{{this.foreignKey}}], references: [id])
+{{else if (eq this.type "many-to-many")}}
+{{@key}} {{this.target}}[]
+{{/if}}
+{{/each}}
+
+{{#if this.options.timestamps}}
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+{{/if}}
+
+{{#if this.options.softDelete}}
+isDeleted Boolean @default(false)
+deletedAt DateTime?
+{{/if}}
+}
+
+{{/each}}
+
+{{#each (collectEnums models)}}
+enum {{this.name}} {
+{{#each this.values}}
+{{this}}
+{{/each}}
+}
+{{/each}}

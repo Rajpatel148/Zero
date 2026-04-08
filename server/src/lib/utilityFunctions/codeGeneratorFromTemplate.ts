@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import Handlebars from 'handlebars';
+import Handlebars from './handlerBarsHelper.js';
 
 type TemplateGeneratorOptions<T> = {
-     templatePath: string;   
-     outputPath: string;     
-     context?: T;             
+     templatePath: string;
+     outputPath: string;
+     context?: T;
 };
 
 export const generateFromTemplate = <T>({
