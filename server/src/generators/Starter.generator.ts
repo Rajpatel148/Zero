@@ -1,7 +1,5 @@
 import { runCommand } from "../cli/cmdRunner.js";
-import { installPackage } from "../cli/packageIntaller.js";
-import { dependecyList, devDependecyList } from "../templates/dependency.template.js";
-import { tsconfigTemplate } from "../templates/tsconfig.template.js";
+import { tsconfigTemplate } from "../templates/config.template.js";
 import { generateFromTemplate } from "../lib/utilityFunctions/codeGeneratorFromTemplate.js";
 import { AppConfig } from "../lib/types.js";
 import path from "path";
@@ -19,14 +17,16 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
      try {
           //run init cmd 
           runCommand("npm init -y");
+          
+          let outputPath = path.join(OUTPUT_PATH,"package.json");
+          generateFromTemplate({
+               templatePath: path.resolve(__dirname,"../templates/package.json.hbs"),
+               outputPath,
+          })
 
-          //install the dependencies 
-          dependecyList.forEach((dependecy) => installPackage(dependecy));
-
-          //install the dev dependencies (TypeScript setup)
-          devDependecyList.forEach((devDep) => installPackage(devDep, true));
-
-          //for prisma 
+          //for install package
+          runCommand("npm i") 
+          
           runCommand("npx prisma init");
 
           //generate tsconfig.json for the project
@@ -36,7 +36,7 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
           writeFile(".env", OUTPUT_PATH, `PORT=${config.app.port}`);
 
           //make the index.ts file
-          let outputPath = path.join(OUTPUT_PATH, "src", "index.ts");
+          outputPath = path.join(OUTPUT_PATH, "src", "index.ts");
           generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/index.ts.hbs"),
                outputPath,
@@ -77,6 +77,10 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
                outputPath,
                context: config
           });
+
+          //for prisma 
+          
+          runCommand("npx prisma generate");
 
           return true;
      } catch (error) {

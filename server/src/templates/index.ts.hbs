@@ -1,8 +1,10 @@
 import app from './app'
+import connectToDB from './utils/dbConnection';
 
 const PORT = process.env.PORT || {{PORT}};
 const HOST = '127.0.0.1';
 
+connectToDB();
 app.listen(Number(PORT), HOST, () => {
 console.log(`Server listening on ${HOST}:${PORT}`);
 });

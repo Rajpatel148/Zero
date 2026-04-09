@@ -1,22 +1,17 @@
 export const tsconfigTemplate = (): string => {
      const config = {
           compilerOptions: {
-               target: "ES2020",
-               module: "NodeNext",
-               moduleResolution: "NodeNext",
-               lib: ["ES2020"],
+               target: "ES6",
+               module: "commonjs",
                types:["node"],
                outDir: "./dist",
                rootDir: ".",
                strict: true,
                esModuleInterop: true,
-               resolveJsonModule: true,
-               skipLibCheck: true,
-               forceConsistentCasingInFileNames: true,
+               allowSyntheticDefaultImports: true,
                sourceMap: true,
-               declaration: true,
           },
-          include: ["src/**/*.ts"],
+          include: ["src/**/*.ts","prisma.config.ts"],
           exclude: ["node_modules", "dist"],
      };
 
