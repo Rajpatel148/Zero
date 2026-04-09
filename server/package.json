@@ -1,14 +1,27 @@
 {
-  "name": "zero-engine",
+  "name": "zero-backend",
   "version": "1.0.0",
-  "description": "A config-driven backend generator that allows developers to define models, features, and structure in a simple config file, and automatically generates a complete, scalable backend (APIs, controllers, routes, and core logic) with zero repetitive coding.",
+  "description": "A config-driven backend generator that allows developers to define models, features, and structure in a simple config file, and automatically generates a complete, scalable backend with zero repetitive coding.",
   "keywords": [
     "zero",
-    "zero engine",
+    "backend",
     "backend generator",
-    "CLI",
-    "nodejs"
+    "nodejs",
+    "cli",
+    "boilerplate",
+    "scaffold",
+    "automation",
+    "express",
+    "typescript"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rajpatel148/Zero.git"
+  },
+  "homepage": "https://github.com/Rajpatel148/Zero#readme",
+  "bugs": {
+    "url": "https://github.com/Rajpatel148/Zero/issues"
+  },
   "license": "ISC",
   "author": "RAJ MOVALIYA",
   "type": "module",
@@ -16,13 +29,22 @@
   "bin": {
     "zero": "dist/bin/zero.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "copy-templates": "node scripts/copy-templates.cjs",
     "build": "tsc && npm run copy-templates",
     "dev": "ts-node --esm bin/zero.ts",
     "start": "node dist/bin/zero.js",
     "lint": "prettier --check '**/*.{ts,js,json,md}'",
-    "format": "prettier --write '**/*.{ts,js,json,md}'"
+    "format": "prettier --write '**/*.{ts,js,json,md}'",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "ajv": "^8.18.0",
@@ -32,14 +54,14 @@
     "ejs": "^5.0.1",
     "express": "^5.2.1",
     "handlebars": "^4.7.9",
-    "js-yaml": "^4.1.1",
-    "prettier": "^3.8.1"
+    "js-yaml": "^4.1.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.5.2",
     "copyfiles": "^2.4.1",
+    "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2"
   }

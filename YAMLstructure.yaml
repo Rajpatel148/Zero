@@ -1,0 +1,124 @@
+# Config File strucutre 
+
+app:
+  name: zerox-app
+  port: 3000
+
+server:
+  apiPrefix: /api/v1
+
+database:
+  provider: postgres
+  url: ${DATABASE_URL}
+
+models:
+  User:
+    table: users
+    fields:
+      id:
+        type: uuid
+        primary: true
+
+      name:
+        type: string
+        required: true
+
+      email:
+        type: string
+        required: true
+        unique: true
+
+      password:
+        type: string
+        required: true
+
+      createdAt:
+        type: date
+        auto: true
+
+    options:
+      timestamps: true
+      softDelete: false
+
+  Product:
+    fields:
+      title:
+        type: string
+        required: true
+
+      price:
+        type: number
+        required: true
+
+      stock:
+        type: number
+        default: 0
+
+features:
+  crud:
+    enabled: true
+    pagination:
+      enabled: true
+      defaultLimit: 10
+
+  # auth:
+  #   enabled: true
+  #   strategy: jwt
+  #   userModel: User
+
+  # validation:
+  #   enabled: true
+  #   provider: joi
+
+  # logging:
+  #   enabled: true
+  #   level: info
+
+  # rateLimit:
+  #   enabled: true
+  #   maxRequests: 100
+  #   windowMs: 60000
+
+# relations:
+#   - from: Order.userId
+#     to: User.id
+#     type: many-to-one
+
+# plugins:
+#   - name: email
+#     enabled: true
+#     config:
+#       provider: smtp
+#       from: no-reply@example.com
+
+#   - name: cache
+#     enabled: false
+
+output:
+  # structure: mvc
+  # language: javascript
+  # moduleSystem: commonjs
+
+  paths:
+    base: ./output
+    controllers: controllers
+    models: models
+    routes: routes
+    middleware: middleware
+
+# naming:
+#   case: camelCase
+#   fileCase: kebab-case
+
+security:
+  hash: bcrypt
+  jwtSecret: ${JWT_SECRET}
+  cors:
+    enabled: true
+
+# env:
+#   development:
+#     debug: true
+
+#   production:
+#     debug: false
