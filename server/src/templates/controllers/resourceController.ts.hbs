@@ -14,36 +14,30 @@ res.status(500).json(createResponse(false, "Internal Error for getting {{pascalC
 }
 };
 
-export const create{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res)
-=> {
+export const create{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
 // business logic
 res.status(200).json(createResponse(true, "{{pascalCase name}} create Successfully", {}));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for creating {{pascalCase name}}", error as
-Error));
+res.status(500).json(createResponse(false, "Internal Error for creating {{pascalCase name}}", error as Error));
 }
 };
 
-export const update{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req,
-res) => {
+export const update{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req,res) => {
 try {
 // business logic
 res.status(200).json(createResponse(true, "{{pascalCase name}} update Successfully", {}));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for updating {{pascalCase name}}", error as
-Error));
+res.status(500).json(createResponse(false, "Internal Error for updating {{pascalCase name}}", error as Error));
 }
 };
 
-export const delete{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async
-(req, res) => {
+export const delete{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
 // business logic
 res.status(200).json(createResponse(true, "{{pascalCase name}} deleted Successfully", {}));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for deleting {{pascalCase name}}", error
-as Error));
+res.status(500).json(createResponse(false, "Internal Error for deleting {{pascalCase name}}", error as Error));
 }
 };
 
@@ -52,55 +46,46 @@ as Error));
 {{#each api.methods}}
 
 {{#if (eq this "create")}}
-export const create{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> =
-async (req, res) => {
+export const create{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
 // business logic
 res.status(200).json(createResponse(true, "{{pascalCase ../name}} create Successfully", {}));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for creating {{pascalCase
-../name}}", error as Error));
+res.status(500).json(createResponse(false, "Internal Error for creating {{pascalCase ../name}}", error as Error));
 }
 };
 {{/if}}
 
 {{#if (eq this "read")}}
-export const get{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown>
-= async (req, res) => {
+export const get{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
 // business logic
 res.status(200).json(createResponse(true, "{{pascalCase ../name}} get Successfully", {}));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for getting {{pascalCase
-../name}}", error as Error));
+res.status(500).json(createResponse(false, "Internal Error for getting {{pascalCase ../name}}", error as Error));
 }
 };
 {{/if}}
 
 {{#if (eq this "update")}}
-export const update{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown,
-unknown> = async (req, res) => {
+export const update{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
 // business logic
 res.status(200).json(createResponse(true, "{{pascalCase ../name}} update
 Successfully", {}));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for updating
-{{pascalCase ../name}}", error as Error));
+res.status(500).json(createResponse(false, "Internal Error for updating {{pascalCase ../name}}", error as Error));
 }
 };
 {{/if}}
 
 {{#if (eq this "delete")}}
-export const delete{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse,
-unknown, unknown> = async (req, res) => {
+export const delete{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
 // business logic
-res.status(200).json(createResponse(true, "{{pascalCase ../name}} deleted
-Successfully", {}));
+res.status(200).json(createResponse(true, "{{pascalCase ../name}} deleted Successfully", {}));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for deleting
-{{pascalCase ../name}}", error as Error));
+res.status(500).json(createResponse(false, "Internal Error for deleting {{pascalCase ../name}}", error as Error));
 }
 };
 {{/if}}

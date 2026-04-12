@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Handlebars from './handlerBarsHelper.js';
+import prettier from 'prettier';
 
 type TemplateGeneratorOptions<T> = {
      templatePath: string;
@@ -13,23 +14,40 @@ export const generateFromTemplate = <T>({
      outputPath,
      context,
 }: TemplateGeneratorOptions<T>) => {
-     try {
-          // Read template file
+     (async () =>{
+          // Read template
           const templateContent = fs.readFileSync(templatePath, 'utf-8');
 
           // Compile template
           const template = Handlebars.compile(templateContent);
 
-          //  Render template with context
+          // Render template
           const renderedCode = template(context);
 
-          //  Ensure folder exists
+          // Ensure directory exists
           fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
-          // Save rendered content to outputPath
-          fs.writeFileSync(outputPath, renderedCode);
-     } catch (error) {
-          console.error('❌ Template generation failed ');
-          throw error
-     }
+          // Detect file type → choose parser
+          const ext = path.extname(outputPath);
+          if (ext === '.prisma') {
+               fs.writeFileSync(outputPath, renderedCode);
+               return;
+          }
+          let parser: prettier.BuiltInParserName = 'babel';
+
+          if (ext === '.ts') parser = 'typescript';
+          else if (ext === '.json') parser = 'json';
+          else if (ext === '.yaml' || ext === '.yml') parser = 'yaml';
+
+          // Format using Prettier
+          const formattedCode = await prettier.format(renderedCode, {
+               parser,
+          });
+
+          // Write file
+          fs.writeFileSync(outputPath, formattedCode);
+     })().catch(err => {
+          console.error('❌ Template generation failed');
+          throw err;
+     });
 };
