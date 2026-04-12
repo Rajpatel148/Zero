@@ -13,16 +13,19 @@ const __dirname = path.dirname(__filename);
 type starterGeneratorPrms = {
      config: AppConfig;
 }
-export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
+export const starterGenerator = async ({ config }: starterGeneratorPrms): Promise<boolean> => {
      try {
           //run init cmd 
           runCommand("npm init -y");
           
           let outputPath = path.join(OUTPUT_PATH,"package.json");
-          generateFromTemplate({
-               templatePath: path.resolve(__dirname,"../templates/package.json.hbs"),
+
+          await generateFromTemplate({
+               templatePath: path.resolve(__dirname, "../templates/package.json.hbs"),
                outputPath,
-          })
+          });
+
+          
 
           //for install package
           runCommand("npm i") 
@@ -37,35 +40,34 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
 
           //make the index.ts file
           outputPath = path.join(OUTPUT_PATH, "src", "index.ts");
-          generateFromTemplate({
+          await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/index.ts.hbs"),
                outputPath,
                context: {
                     PORT: config.app.port,
                     ENABLE_LOGGING: false
                }
-          }
-          );
+          });
 
           // make the app.ts file 
           outputPath = path.join(OUTPUT_PATH, "src", "app.ts");
-          generateFromTemplate({
+          await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/app.ts.hbs"),
                outputPath,
                context:config
-          })
+          });
 
           //make prisma Instance file
           outputPath = path.join(OUTPUT_PATH, "src", "utils", "prismaInstance.ts");
-          generateFromTemplate({
+          await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/prismaInstance.ts.hbs"),
                outputPath
-          })
+          });
 
 
           //make DB Instance file
           outputPath = path.join(OUTPUT_PATH, "src", "utils", "dbConnection.ts");
-          generateFromTemplate({
+          await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/dbConnection.ts.hbs"),
                outputPath
           });
@@ -73,7 +75,7 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
           appendFile(".env", OUTPUT_PATH, `DATABASE_URL=${config.database.url}`)
           //make Prisma Schema file
           outputPath = path.join(OUTPUT_PATH, "prisma", "schema.prisma");
-          generateFromTemplate({
+          await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/prisma/schema.ts.hbs"),
                outputPath,
                context: config
@@ -85,10 +87,10 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
           
           // create APIResponse file in utils
           outputPath = path.join(OUTPUT_PATH,"src","utils","apiResponse.ts");
-          generateFromTemplate({
+          await generateFromTemplate({
                templatePath: path.resolve(__dirname,"../templates/utils/apiResponse.ts.hbs"),
                outputPath,
-          })
+          });
 
           return true;
      } catch (error) {

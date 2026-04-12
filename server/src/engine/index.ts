@@ -15,16 +15,15 @@ export const zeroEngine = async (config : AppConfig) =>{
      OUTPUT_PATH = path.join(BASE_PATH,"server");
         
      //generate the server starting code 
-     processFlag = starterGenerator({
+     processFlag = await starterGenerator({
           config: config
-     })
+     });
      
      if (!processFlag) throw new Error("Something failed");
  
      // Crud Generator 
      if (config.features.crud.enabled == true){
-          //call CRud generator 
-          processFlag = crudGenerator(config);
+          processFlag = await crudGenerator(config);
 
           if (!processFlag) throw new Error("Something failed");
      }

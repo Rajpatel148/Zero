@@ -9,12 +9,12 @@ type TemplateGeneratorOptions<T> = {
      context?: T;
 };
 
-export const generateFromTemplate = <T>({
+export const generateFromTemplate = async <T>({
      templatePath,
      outputPath,
      context,
 }: TemplateGeneratorOptions<T>) => {
-     (async () =>{
+     try {
           // Read template
           const templateContent = fs.readFileSync(templatePath, 'utf-8');
 
@@ -29,7 +29,7 @@ export const generateFromTemplate = <T>({
 
           // Detect file type → choose parser
           const ext = path.extname(outputPath);
-          if (ext === '.prisma') {
+          if(ext === '.prisma'){
                fs.writeFileSync(outputPath, renderedCode);
                return;
           }
@@ -46,8 +46,9 @@ export const generateFromTemplate = <T>({
 
           // Write file
           fs.writeFileSync(outputPath, formattedCode);
-     })().catch(err => {
+
+     } catch (error) {
           console.error('❌ Template generation failed');
-          throw err;
-     });
+          throw error;
+     }
 };

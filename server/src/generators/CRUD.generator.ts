@@ -8,7 +8,7 @@ import { OUTPUT_PATH } from "../engine/index.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const crudGenerator = (config: AppConfig): boolean => {
+export const crudGenerator = async (config: AppConfig): Promise<boolean> => {
      try {
 
           if (!config.models) {
@@ -23,13 +23,13 @@ export const crudGenerator = (config: AppConfig): boolean => {
 
           // 1. Generate the main routes index.ts file
           const routeIndexPath = path.join(srcPath, "routes", "index.ts");
-          generateFromTemplate({
+          await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/routes/index.ts.hbs"),
                outputPath: routeIndexPath,
                context: config
           });
 
-          Object.keys(config.models).forEach((modelName) => {
+          for (const modelName of Object.keys(config.models)) {
                const modelData = config.models[modelName];
 
                // Default API config
@@ -41,7 +41,7 @@ export const crudGenerator = (config: AppConfig): boolean => {
 
                // Skip completely if API disabled
                if (!apiConfig.enabled) {
-                    return;
+                    continue;
                }
 
                const context = {
@@ -58,7 +58,7 @@ export const crudGenerator = (config: AppConfig): boolean => {
                          `${modelName.toLowerCase()}.controller.ts`
                     );
 
-                    generateFromTemplate({
+                    await generateFromTemplate({
                          templatePath: path.resolve(
                               __dirname,
                               "../templates/controllers/resourceController.ts.hbs"
@@ -76,7 +76,7 @@ export const crudGenerator = (config: AppConfig): boolean => {
                          `${modelName}.route.ts`
                     );
 
-                    generateFromTemplate({
+                    await generateFromTemplate({
                          templatePath: path.resolve(
                               __dirname,
                               "../templates/routes/helperRouter.ts.hbs"
@@ -85,7 +85,7 @@ export const crudGenerator = (config: AppConfig): boolean => {
                          context: context
                     });
                }
-          });
+          }
           return true;
      } catch (error) {
           const errorMessage = error instanceof Error ? error.message : String(error);
