@@ -57,9 +57,9 @@ models:
 features:
   crud:
     enabled: true
-    pagination:
-      enabled: true
-      defaultLimit: 10
+    # pagination:
+    #   enabled: true
+    #   defaultLimit: 10
 
   # auth:
   #   enabled: true

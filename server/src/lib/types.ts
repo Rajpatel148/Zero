@@ -52,6 +52,14 @@ export interface AppConfig {
           language: string;
           framework: string;
           folders: Record<string, unknown>;
+          paths: {
+               base:string;
+               controllers: string;
+               models: string;
+               routes: string;
+               middlewares: string;
+               services: string;
+          };
      };
 }
 

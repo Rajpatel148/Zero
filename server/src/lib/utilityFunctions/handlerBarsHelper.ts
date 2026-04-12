@@ -125,28 +125,11 @@ Handlebars.registerHelper('formatDefault', (defaultValue: any, type: string) => 
      }
 });
 
-/** Validate relation */
-Handlebars.registerHelper('validateRelation', (relation: any) => {
-     const required = ['type', 'target'];
-
-     for (const field of required) {
-          if (!relation[field]) {
-               throw new Error(`Relation missing required field: ${field}`);
-          }
-     }
-
-     return true;
+Handlebars.registerHelper("lowercase", function (str) {
+     return str.toLowerCase();
 });
 
-/** Foreign key type */
-Handlebars.registerHelper('getForeignKeyType', (relation: any) => {
-     return relation.foreignKeyType || 'String';
+Handlebars.registerHelper("pascalCase", (str) => {
+     return str.charAt(0).toUpperCase() + str.slice(1);
 });
-
-/** Sanitize */
-Handlebars.registerHelper('sanitize', (str: string) => {
-     if (typeof str !== 'string') return str;
-     return str.replace(/[^a-zA-Z0-9_]/g, '_');
-});
-
 export default Handlebars;

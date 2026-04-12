@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
+import { createResponse } from './utils/apiResponse';
+import router from './{{output.paths.routes}}';
 
 const app = express();
 
@@ -23,8 +25,14 @@ return compression.filter(req, res);
 }),
 );
 
-app.get('/', (req, res) => {
-res.json({ messaage: 'hello world from Zero' });
+app.get('/health', (req, res) => {
+res.status(200).json(createResponse(true, "Server is still healthly and running", null))
+});
+
+app.use('{{server.apiPrefix}}',router);
+
+app.use((req, res) => {
+res.status(404).json(createResponse(false, req.url + ' Not Found', null));
 });
 
 export default app;

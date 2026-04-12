@@ -1,0 +1,41 @@
+import { Router } from "express";
+import * as controller from "../controllers/{{lowercase name}}.controller";
+
+const router = Router();
+
+{{#if api.enabled}}
+
+{{#if api.crud}}
+
+router.get("/", controller.get{{pascalCase name}});
+router.post("/", controller.create{{pascalCase name}});
+router.patch("/:id", controller.update{{pascalCase name}});
+router.delete("/:id", controller.delete{{pascalCase name}});
+
+{{else}}
+
+{{#each api.methods}}
+
+{{#if (eq this "create")}}
+router.post("/", controller.create{{pascalCase ../name}});
+{{/if}}
+
+{{#if (eq this "read")}}
+router.get("/", controller.get{{pascalCase ../name}});
+{{/if}}
+
+{{#if (eq this "update")}}
+router.patch("/", controller.update{{pascalCase ../name}});
+{{/if}}
+
+{{#if (eq this "delete")}}
+router.delete("/", controller.delete{{pascalCase ../name}});
+{{/if}}
+
+{{/each}}
+
+{{/if}}
+
+{{/if}}
+
+export default router;

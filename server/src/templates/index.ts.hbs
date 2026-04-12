@@ -1,14 +1,31 @@
-import app from './app'
+import app from './app';
 import connectToDB from './utils/dbConnection';
 
 const PORT = process.env.PORT || {{PORT}};
-const HOST = '127.0.0.1';
+const HOST = process.env.HOST || '127.0.0.1';
 
-connectToDB();
-app.listen(Number(PORT), HOST, () => {
-console.log(`Server listening on ${HOST}:${PORT}`);
+const startServer = async () => {
+try {
+await connectToDB();
+console.log('✅ Database connected');
+
+const server = app.listen(Number(PORT), HOST, () => {
+console.log(`🚀 Server running at http://${HOST}:${PORT}`);
+});
+
+server.on('error', (err: unknown) => {
+console.error('❌ Server error:', err);
+process.exit(1);
 });
 
 {{#if ENABLE_LOGGING}}
-console.log('Logging is enabled');
+console.log('📝 Logging is enabled');
 {{/if}}
+
+} catch (error) {
+console.error('❌ Failed to start server:', error);
+process.exit(1);
+}
+};
+
+startServer();

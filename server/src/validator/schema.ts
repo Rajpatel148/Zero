@@ -16,7 +16,7 @@ export const fileSchema = {
                type: "object",
                properties: {
                     apiPrefix: { type: "string" },
-                    // amework: { type: "string", default: "express" },
+                    // framework: { type: "string", default: "express" },
                },
                additionalProperties: false,
           },
@@ -60,6 +60,23 @@ export const fileSchema = {
                                              additionalProperties: true,
                                         },
                                    },
+                                   additionalProperties: false,
+                              },
+
+                              api: {
+                                   type: "object",
+                                   properties: {
+                                        enabled: { type: "boolean" },
+                                        crud: { type: "boolean" },
+                                        methods: {
+                                             type: "array",
+                                             items: {
+                                                  type: "string",
+                                                  enum: ["create", "read", "update", "delete"],
+                                             },
+                                        },
+                                   },
+                                   required: ["enabled"],
                                    additionalProperties: false,
                               },
 

@@ -3,6 +3,7 @@ import { BASE_PATH } from "../../bin/zero.js";
 import { starterGenerator } from "../generators/Starter.generator.js";
 import { AppConfig } from "../lib/types.js";
 import { folderGenerator } from "../lib/utilityFunctions/folder.helper.js";
+import { crudGenerator } from "../generators/CRUD.generator.js";
 
 export let OUTPUT_PATH : string;
 
@@ -18,10 +19,13 @@ export const zeroEngine = async (config : AppConfig) =>{
           config: config
      })
      
-     if (processFlag == false) {
-          process.exit(1);
-     }
+     if (!processFlag) throw new Error("Something failed");
+ 
+     // Crud Generator 
+     if (config.features.crud.enabled == true){
+          //call CRud generator 
+          processFlag = crudGenerator(config);
 
-     //connection of database is generate 
-     //call the model generator
+          if (!processFlag) throw new Error("Something failed");
+     }
 }

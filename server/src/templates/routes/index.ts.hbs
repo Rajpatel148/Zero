@@ -1,0 +1,17 @@
+import { Router } from "express";
+
+{{#each models}}
+{{#if this.api.enabled}}
+import {{lowercase @key}}Router from './{{@key}}.route';
+{{/if}}
+{{/each}}
+
+const router = Router();
+
+{{#each models}}
+{{#if this.api.enabled}}
+router.use('/{{lowercase @key}}', {{lowercase @key}}Router);
+{{/if}}
+{{/each}}
+
+export default router;

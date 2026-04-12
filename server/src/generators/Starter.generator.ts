@@ -52,6 +52,7 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
           generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/app.ts.hbs"),
                outputPath,
+               context:config
           })
 
           //make prisma Instance file
@@ -81,6 +82,13 @@ export const starterGenerator = ({ config }: starterGeneratorPrms): boolean => {
           //for prisma 
           
           runCommand("npx prisma generate");
+          
+          // create APIResponse file in utils
+          outputPath = path.join(OUTPUT_PATH,"src","utils","apiResponse.ts");
+          generateFromTemplate({
+               templatePath: path.resolve(__dirname,"../templates/utils/apiResponse.ts.hbs"),
+               outputPath,
+          })
 
           return true;
      } catch (error) {
