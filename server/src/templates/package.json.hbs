@@ -18,7 +18,9 @@
 "compression": "^1.8.1",
 "cors": "^2.8.6",
 "dotenv": "^17.4.1",
-"express": "^5.2.1"
+"express": "^5.2.1"{{#if authEnabled}},
+"bcryptjs": "^2.4.3",
+"jsonwebtoken": "^9.0.2"{{/if}}
 },
 "devDependencies": {
 "@types/compression": "^1.8.1",
@@ -27,6 +29,9 @@
 "@types/node": "^25.5.2",
 "prisma": "^7.7.0",
 "ts-node": "^10.9.2",
-"typescript": "^6.0.2"
+"nodemon": "^3.1.9",
+"typescript": "^6.0.2"{{#if authEnabled}},
+"@types/bcryptjs": "^2.4.6",
+"@types/jsonwebtoken": "^9.0.7"{{/if}}
 }
 }

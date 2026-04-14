@@ -7,9 +7,10 @@ const router = Router();
 
 {{#if api.crud}}
 
-router.get("/", controller.get{{pascalCase name}});
 router.post("/", controller.create{{pascalCase name}});
-router.patch("/:id", controller.update{{pascalCase name}});
+router.get("/", controller.getAll{{pascalCase name}});
+router.get("/:id", controller.get{{pascalCase name}}ById);
+router.put("/:id", controller.update{{pascalCase name}});
 router.delete("/:id", controller.delete{{pascalCase name}});
 
 {{else}}
@@ -21,15 +22,16 @@ router.post("/", controller.create{{pascalCase ../name}});
 {{/if}}
 
 {{#if (eq this "read")}}
-router.get("/", controller.get{{pascalCase ../name}});
+router.get("/", controller.getAll{{pascalCase ../name}});
+router.get("/:id", controller.get{{pascalCase ../name}}ById);
 {{/if}}
 
 {{#if (eq this "update")}}
-router.patch("/", controller.update{{pascalCase ../name}});
+router.put("/:id", controller.update{{pascalCase ../name}});
 {{/if}}
 
 {{#if (eq this "delete")}}
-router.delete("/", controller.delete{{pascalCase ../name}});
+router.delete("/:id", controller.delete{{pascalCase ../name}});
 {{/if}}
 
 {{/each}}

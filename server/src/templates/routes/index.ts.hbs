@@ -3,15 +3,31 @@ import { Router } from "express";
 {{#each models}}
 {{#if this.api.enabled}}
 import {{lowercase @key}}Router from './{{@key}}.route';
+{{else}}
+{{#unless this.api}}
+import {{lowercase @key}}Router from './{{@key}}.route';
+{{/unless}}
 {{/if}}
 {{/each}}
+
+{{#if authEnabled}}
+import authRouter from './auth.route';
+{{/if}}
 
 const router = Router();
 
 {{#each models}}
 {{#if this.api.enabled}}
 router.use('/{{lowercase @key}}', {{lowercase @key}}Router);
+{{else}}
+{{#unless this.api}}
+router.use('/{{lowercase @key}}', {{lowercase @key}}Router);
+{{/unless}}
 {{/if}}
 {{/each}}
+
+{{#if authEnabled}}
+router.use('/auth', authRouter);
+{{/if}}
 
 export default router;

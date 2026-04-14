@@ -1,6 +1,6 @@
 {
   "name": "zero-backend",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "A config-driven backend generator that allows developers to define models, features, and structure in a simple config file, and automatically generates a complete, scalable backend with zero repetitive coding.",
   "keywords": [
     "zero",

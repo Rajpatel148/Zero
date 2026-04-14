@@ -6,7 +6,6 @@ export const fileSchema = {
                properties: {
                     name: { type: "string" },
                     port: { type: "integer" },
-                    // v: { type: "string", enum: ["development", "production", "test"] },
                },
                required: ["name", "port"],
                additionalProperties: false,
@@ -16,7 +15,6 @@ export const fileSchema = {
                type: "object",
                properties: {
                     apiPrefix: { type: "string" },
-                    // framework: { type: "string", default: "express" },
                },
                additionalProperties: false,
           },
@@ -124,6 +122,8 @@ export const fileSchema = {
                     type: "object",
                     properties: {
                          enabled: { type: "boolean" },
+                         strategy: { type: "string" },
+                         userModel: { type: "string" },
                     },
                     required: ["enabled"],
                     additionalProperties: true, // allow feature-specific configs
@@ -147,10 +147,6 @@ export const fileSchema = {
           output: {
                type: "object",
                properties: {
-                    // structure: { type: "string" },
-                    // language: { type: "string", default: "javascript" },
-                    // framework: { type: "string" },
-
                     paths: {
                          type: "object",
                          properties: {
@@ -177,6 +173,7 @@ export const fileSchema = {
                          type: "object",
                          properties: {
                               enabled: { type: "boolean" },
+                              origin: { type: "string" },
                          },
                          additionalProperties: true,
                     },

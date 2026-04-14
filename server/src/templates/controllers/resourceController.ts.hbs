@@ -1,43 +1,79 @@
+import { Prisma } from "@prisma/client";
 import { RequestHandler } from "express";
 import { ApiResponse, createResponse } from "../utils/apiResponse";
+import prisma from "../utils/prismaInstance";
 
 {{#if api.enabled}}
 
 {{#if api.crud}}
 
-export const get{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
+export const create{{pascalCase name}}: RequestHandler<unknown, ApiResponse, Prisma.{{pascalCase name}}CreateInput, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase name}} get Successfully", {}));
+{{#if validationFields}}
+// Validation
+const errors: string[] = [];
+{{#each validationFields}}
+{{#if this.required}}
+if (req.body.{{@key}} === undefined || req.body.{{@key}} === null || req.body.{{@key}} === '') {
+errors.push("{{@key}} is required");
+}
+{{/if}}
+{{#if this.enum}}
+if (req.body.{{@key}} != null && ![{{{join this.enum ", "}}}].includes(req.body.{{@key}})) {
+errors.push("{{@key}} must be one of: {{joinFields this.enum}}");
+}
+{{/if}}
+{{/each}}
+if (errors.length > 0) {
+res.status(400).json(createResponse(false, errors.join(", "), null));
+return;
+}
+{{/if}}
+
+const data = await prisma.{{camelCase name}}.create({ data: req.body });
+res.status(201).json(createResponse(true, "{{pascalCase name}} created successfully", data));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for getting {{pascalCase name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 
-export const create{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
+export const getAll{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase name}} create Successfully", {}));
+const data = await prisma.{{camelCase name}}.findMany();
+res.status(200).json(createResponse(true, "{{pascalCase name}} fetched successfully", data));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for creating {{pascalCase name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 
-export const update{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req,res) => {
+export const get{{pascalCase name}}ById: RequestHandler<{ id: string }, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase name}} update Successfully", {}));
+const data = await prisma.{{camelCase name}}.findUnique({ where: { id: req.params.id } });
+if (!data) {
+res.status(404).json(createResponse(false, "{{pascalCase name}} not found", null));
+return;
+}
+res.status(200).json(createResponse(true, "{{pascalCase name}} fetched successfully", data));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for updating {{pascalCase name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 
-export const delete{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
+export const update{{pascalCase name}}: RequestHandler<{ id: string }, ApiResponse, Prisma.{{pascalCase name}}UpdateInput, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase name}} deleted Successfully", {}));
+const data = await prisma.{{camelCase name}}.update({ where: { id: req.params.id }, data: req.body });
+res.status(200).json(createResponse(true, "{{pascalCase name}} updated successfully", data));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for deleting {{pascalCase name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
+}
+};
+
+export const delete{{pascalCase name}}: RequestHandler<{ id: string }, ApiResponse, unknown, unknown> = async (req, res) => {
+try {
+await prisma.{{camelCase name}}.delete({ where: { id: req.params.id } });
+res.status(200).json(createResponse(true, "{{pascalCase name}} deleted successfully", null));
+} catch (error) {
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 
@@ -46,46 +82,78 @@ res.status(500).json(createResponse(false, "Internal Error for deleting {{pascal
 {{#each api.methods}}
 
 {{#if (eq this "create")}}
-export const create{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
+export const create{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, Prisma.{{pascalCase ../name}}CreateInput, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase ../name}} create Successfully", {}));
+{{#if ../validationFields}}
+const errors: string[] = [];
+{{#each ../validationFields}}
+{{#if this.required}}
+if (req.body.{{@key}} === undefined || req.body.{{@key}} === null || req.body.{{@key}} === '') {
+errors.push("{{@key}} is required");
+}
+{{/if}}
+{{#if this.enum}}
+if (req.body.{{@key}} != null && ![{{{join this.enum ", "}}}].includes(req.body.{{@key}})) {
+errors.push("{{@key}} must be one of: {{joinFields this.enum}}");
+}
+{{/if}}
+{{/each}}
+if (errors.length > 0) {
+res.status(400).json(createResponse(false, errors.join(", "), null));
+return;
+}
+{{/if}}
+
+const data = await prisma.{{camelCase ../name}}.create({ data: req.body });
+res.status(201).json(createResponse(true, "{{pascalCase ../name}} created successfully", data));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for creating {{pascalCase ../name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 {{/if}}
 
 {{#if (eq this "read")}}
-export const get{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
+export const getAll{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase ../name}} get Successfully", {}));
+const data = await prisma.{{camelCase ../name}}.findMany();
+res.status(200).json(createResponse(true, "{{pascalCase ../name}} fetched successfully", data));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for getting {{pascalCase ../name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
+}
+};
+
+export const get{{pascalCase ../name}}ById: RequestHandler<{ id: string }, ApiResponse, unknown, unknown> = async (req, res) => {
+try {
+const data = await prisma.{{camelCase ../name}}.findUnique({ where: { id: req.params.id } });
+if (!data) {
+res.status(404).json(createResponse(false, "{{pascalCase ../name}} not found", null));
+return;
+}
+res.status(200).json(createResponse(true, "{{pascalCase ../name}} fetched successfully", data));
+} catch (error) {
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 {{/if}}
 
 {{#if (eq this "update")}}
-export const update{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
+export const update{{pascalCase ../name}}: RequestHandler<{ id: string }, ApiResponse, Prisma.{{pascalCase ../name}}UpdateInput, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase ../name}} update
-Successfully", {}));
+const data = await prisma.{{camelCase ../name}}.update({ where: { id: req.params.id }, data: req.body });
+res.status(200).json(createResponse(true, "{{pascalCase ../name}} updated successfully", data));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for updating {{pascalCase ../name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 {{/if}}
 
 {{#if (eq this "delete")}}
-export const delete{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
+export const delete{{pascalCase ../name}}: RequestHandler<{ id: string }, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
-// business logic
-res.status(200).json(createResponse(true, "{{pascalCase ../name}} deleted Successfully", {}));
+await prisma.{{camelCase ../name}}.delete({ where: { id: req.params.id } });
+res.status(200).json(createResponse(true, "{{pascalCase ../name}} deleted successfully", null));
 } catch (error) {
-res.status(500).json(createResponse(false, "Internal Error for deleting {{pascalCase ../name}}", error as Error));
+res.status(500).json(createResponse(false, (error as Error).message, null));
 }
 };
 {{/if}}

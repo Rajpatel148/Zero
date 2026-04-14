@@ -132,4 +132,18 @@ Handlebars.registerHelper("lowercase", function (str) {
 Handlebars.registerHelper("pascalCase", (str) => {
      return str.charAt(0).toUpperCase() + str.slice(1);
 });
+
+Handlebars.registerHelper("camelCase", (str: string) => {
+     return str.charAt(0).toLowerCase() + str.slice(1);
+});
+
+Handlebars.registerHelper("includes", (array: unknown[], value: unknown) => {
+     if (!Array.isArray(array)) return false;
+     return array.includes(value);
+});
+
+Handlebars.registerHelper("json", (context: unknown) => {
+     return JSON.stringify(context);
+});
+
 export default Handlebars;

@@ -4,7 +4,7 @@ import { OUTPUT_PATH } from '../engine/index.js';
 export const runCommand = (command: string) => {
      try {
           execSync(command, {
-               stdio: 'inherit', // shows output in terminal
+               stdio: ['ignore', 'pipe', 'inherit'],
                cwd: OUTPUT_PATH, //  run in user's project
           });
      } catch (error) {

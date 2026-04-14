@@ -1,7 +1,7 @@
 import { runCommand } from "../cli/cmdRunner.js";
 import { tsconfigTemplate } from "../templates/config.template.js";
 import { generateFromTemplate } from "../lib/utilityFunctions/codeGeneratorFromTemplate.js";
-import { AppConfig } from "../lib/types.js";
+import { AppConfig, AuthFeatureSchema } from "../lib/types.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { OUTPUT_PATH } from "../engine/index.js";
@@ -17,12 +17,17 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
      try {
           //run init cmd 
           runCommand("npm init -y");
+
+          // Check if auth is enabled for package.json generation
+          const authFeature = config.features?.auth as AuthFeatureSchema | undefined;
+          const authEnabled = authFeature?.enabled === true;
           
           let outputPath = path.join(OUTPUT_PATH,"package.json");
 
           await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/package.json.hbs"),
                outputPath,
+               context: { authEnabled },
           });
 
           
@@ -73,6 +78,13 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
           });
 
           appendFile(".env", OUTPUT_PATH, `DATABASE_URL=${config.database.url}`)
+
+          // Add JWT_SECRET to .env if auth is enabled
+          if (authEnabled) {
+               const jwtSecret = config.security?.jwtSecret || "your-super-secret-jwt-key";
+               appendFile(".env", OUTPUT_PATH, `JWT_SECRET=${jwtSecret}`);
+          }
+
           //make Prisma Schema file
           outputPath = path.join(OUTPUT_PATH, "prisma", "schema.prisma");
           await generateFromTemplate({
@@ -81,9 +93,9 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
                context: config
           });
 
-          //for prisma 
-          
+          //for prisma generate + db push
           runCommand("npx prisma generate");
+          runCommand("npx prisma db push");
           
           // create APIResponse file in utils
           outputPath = path.join(OUTPUT_PATH,"src","utils","apiResponse.ts");
