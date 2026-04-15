@@ -509,23 +509,13 @@ Configures where Zero writes the generated files. All paths are relative to your
 ```yaml
 output:
   paths:
-    base: "./generated"                       # Required: root output folder
-    controllers: "./generated/controllers"    # Optional: override per-type path
-    models: "./generated/models"
-    routes: "./generated/routes"
-    middleware: "./generated/middleware"
-    services: "./generated/services"
+    base: "./server"                       # Default: root output folder
+    controllers: "./server/controllers"    # Optional: override per-type path
+    models: "./server/models"
+    routes: "./server/routes"
+    middleware: "./server/middleware"
+    services: "./server/services"
 ```
-
-| Field | Required | Description |
-|---|---|---|
-| `paths.base` | ✅ Yes | Root directory where all generated code goes |
-| `paths.controllers` | ❌ No | Defaults to `base/controllers` |
-| `paths.models` | ❌ No | Defaults to `base/models` |
-| `paths.routes` | ❌ No | Defaults to `base/routes` |
-| `paths.middleware` | ❌ No | Defaults to `base/middleware` |
-| `paths.services` | ❌ No | Defaults to `base/services` |
-
 ---
 
 ### `env` — Environment Variables
