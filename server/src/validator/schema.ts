@@ -150,7 +150,6 @@ export const fileSchema = {
                     paths: {
                          type: "object",
                          properties: {
-                              base: { type: "string" },
                               controllers: { type: "string" },
                               models: { type: "string" },
                               routes: { type: "string" },

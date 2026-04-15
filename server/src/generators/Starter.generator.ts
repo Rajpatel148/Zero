@@ -93,9 +93,8 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
                context: config
           });
 
-          //for prisma generate + db push
+          //for prisma generate
           runCommand("npx prisma generate");
-          runCommand("npx prisma db push");
           
           // create APIResponse file in utils
           outputPath = path.join(OUTPUT_PATH,"src","utils","apiResponse.ts");
