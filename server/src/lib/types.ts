@@ -46,6 +46,15 @@ export interface AuthFeatureSchema extends FeatureSchema {
      userModel?: string;
 }
 
+export interface PaginationConfig {
+     enabled?: boolean;
+     pageLimit?: number;
+}
+
+export interface CrudFeatureSchema extends FeatureSchema {
+     pagination?: PaginationConfig;
+}
+
 export interface PluginSchema {
      name: string;
      enabled: boolean;

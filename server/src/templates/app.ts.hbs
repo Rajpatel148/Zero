@@ -2,8 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import { createResponse } from './utils/apiResponse';
+{{#if (or features.crud.enabled features.auth.enabled)}}
 import router from './{{output.paths.routes}}';
-
+{{/if}}
 const app = express();
 
 app.use(express.json());
@@ -29,7 +30,9 @@ app.get('/health', (req, res) => {
 res.status(200).json(createResponse(true, "Server is still healthly and running", null))
 });
 
+{{#if (or features.crud.enabled features.auth.enabled)}}
 app.use('{{server.apiPrefix}}',router);
+{{/if}}
 
 app.use((req, res) => {
 res.status(404).json(createResponse(false, req.url + ' Not Found', null));

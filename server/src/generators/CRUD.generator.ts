@@ -1,10 +1,9 @@
-import { AppConfig } from "../lib/types.js";
+import { AppConfig, AuthFeatureSchema, CrudFeatureSchema } from "../lib/types.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateFromTemplate } from "../lib/utilityFunctions/codeGeneratorFromTemplate.js";
 import { folderGenerator } from "../lib/utilityFunctions/folder.helper.js";
 import { OUTPUT_PATH } from "../engine/index.js";
-import { AuthFeatureSchema } from "../lib/types.js";
 import { isStepCompleted, saveStep } from "../lib/utilityFunctions/progress.helper.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,10 +22,27 @@ export const crudGenerator = async (config: AppConfig, resume: boolean = false):
           folderGenerator(config.output.paths.routes, srcPath);
           folderGenerator(config.output.paths.controllers, srcPath);
           folderGenerator(config.output.paths.middleware, srcPath);
+          folderGenerator("utils", srcPath);
 
           // Check if auth is enabled for route index generation
           const authFeature = config.features?.auth as AuthFeatureSchema | undefined;
           const authEnabled = authFeature?.enabled === true;
+
+          // Check if pagination is enabled in config.features.crud
+          const crudFeature = config.features?.crud as CrudFeatureSchema | undefined;
+          const paginationEnabled = crudFeature?.pagination?.enabled === true;
+          const pageLimit = crudFeature?.pagination?.pageLimit ?? 10;
+
+          // Generate pagination utility when the feature is enabled
+          if (paginationEnabled) {
+               const paginationUtilPath = path.join(srcPath, "utils", "pagination.ts");
+               await generateFromTemplate({
+                    templatePath: path.resolve(__dirname, "../templates/utils/pagination.ts.hbs"),
+                    outputPath: paginationUtilPath,
+                    context: { pageLimit },
+               });
+               console.log("✅ Pagination utility generated");
+          }
 
           // 1. Generate the main routes index.ts file
           const routeIndexPath = path.join(srcPath, "routes", "index.ts");
@@ -76,6 +92,8 @@ export const crudGenerator = async (config: AppConfig, resume: boolean = false):
                     ...modelData,
                     api: apiConfig,
                     validationFields: Object.keys(validationFields).length > 0 ? validationFields : null,
+                    paginationEnabled,
+                    pageLimit,
                };
 
                //  Generate Controller ONLY if needed

@@ -1,13 +1,41 @@
 export interface ApiResponse {
-success: boolean;
-message: string;
-data: Object | Object[] | null;
+     success: boolean;
+     message: string;
+     data: Object | Object[] | null;
+{{#if paginationEnabled}}
+     pagination?: Pagination;
+{{/if}}
 }
 
-export const createResponse = (success: boolean, message: string, data: any ): ApiResponse => {
-return {
-success,
-message,
-data: data
+{{#if paginationEnabled}}
+export interface Pagination {
+     page: number;
+     limit: number;
+     totalItems: number;
+     totalPages: number;
+     hasNextPage: boolean;
+     hasPrevPage: boolean;
+}
+
+export const createResponse = (
+     success: boolean,
+     message: string,
+     data: any,
+     pagination?: Pagination,
+): ApiResponse => {
+     return {
+          success,
+          message,
+          data,
+          ...(pagination ? { pagination } : {}),
+     };
 };
+{{else}}
+export const createResponse = (success: boolean, message: string, data: any): ApiResponse => {
+     return {
+          success,
+          message,
+          data,
+     };
 };
+{{/if}}

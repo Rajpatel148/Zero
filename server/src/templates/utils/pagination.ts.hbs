@@ -1,0 +1,87 @@
+import { Pagination } from "./apiResponse";
+
+type PaginationParams = {
+     page: number;
+     limit: number;
+     totalItems: number;
+};
+
+type PaginationQuery = {
+     page?: unknown;
+     limit?: unknown;
+};
+
+type PaginateOptions = {
+     page: number;
+     limit: number;
+     where?: any;
+     orderBy?: any;
+     select?: any;
+     include?: any;
+};
+
+type PaginateModel = {
+     count: (args?: any) => Promise<number>;
+     findMany: (args?: any) => Promise<any[]>;
+};
+
+export const getPaginationParams = (
+     query: PaginationQuery,
+     defaults: { page?: number; limit?: number; maxLimit?: number } = {},
+) => {
+     const defaultPage = defaults.page ?? 1;
+     const defaultLimit = defaults.limit ?? {{pageLimit}};
+     const maxLimit = defaults.maxLimit ?? 100;
+
+     const parsedPage = Number.parseInt(String(query.page ?? defaultPage), 10);
+     const parsedLimit = Number.parseInt(String(query.limit ?? defaultLimit), 10);
+
+     const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+     const limit =
+          Number.isFinite(parsedLimit) && parsedLimit > 0
+               ? Math.min(parsedLimit, maxLimit)
+               : defaultLimit;
+
+     return { page, limit };
+};
+
+export const buildPagination = ({
+     page,
+     limit,
+     totalItems,
+}: PaginationParams): Pagination => {
+     const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / limit);
+
+     return {
+          page,
+          limit,
+          totalItems,
+          totalPages,
+          hasNextPage: totalPages > 0 && page < totalPages,
+          hasPrevPage: totalPages > 0 && page > 1,
+     };
+};
+
+export const paginate = async (
+     model: PaginateModel,
+     options: PaginateOptions,
+) => {
+     const { page, limit, where, orderBy, select, include } = options;
+
+     const [totalItems, data] = await Promise.all([
+          model.count({ where }),
+          model.findMany({
+               where,
+               orderBy,
+               select,
+               include,
+               skip: (page - 1) * limit,
+               take: limit,
+          }),
+     ]);
+
+     return {
+          data,
+          pagination: buildPagination({ page, limit, totalItems }),
+     };
+};

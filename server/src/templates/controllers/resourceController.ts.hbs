@@ -1,6 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { RequestHandler } from "express";
 import { ApiResponse, createResponse } from "../utils/apiResponse";
+{{#if paginationEnabled}}
+import { getPaginationParams, paginate } from "../utils/pagination";
+{{/if}}
 import prisma from "../utils/prismaInstance";
 
 {{#if api.enabled}}
@@ -39,8 +42,14 @@ res.status(500).json(createResponse(false, (error as Error).message, null));
 
 export const getAll{{pascalCase name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
+{{#if paginationEnabled}}
+const { page, limit } = getPaginationParams(req.query as Record<string, unknown>, { limit: {{pageLimit}} });
+const result = await paginate(prisma.{{camelCase name}}, { page, limit });
+res.status(200).json(createResponse(true, "{{pascalCase name}} fetched successfully", result.data, result.pagination));
+{{else}}
 const data = await prisma.{{camelCase name}}.findMany();
 res.status(200).json(createResponse(true, "{{pascalCase name}} fetched successfully", data));
+{{/if}}
 } catch (error) {
 res.status(500).json(createResponse(false, (error as Error).message, null));
 }
@@ -115,8 +124,14 @@ res.status(500).json(createResponse(false, (error as Error).message, null));
 {{#if (eq this "read")}}
 export const getAll{{pascalCase ../name}}: RequestHandler<unknown, ApiResponse, unknown, unknown> = async (req, res) => {
 try {
+{{#if ../paginationEnabled}}
+const { page, limit } = getPaginationParams(req.query as Record<string, unknown>, { limit: {{../pageLimit}} });
+const result = await paginate(prisma.{{camelCase ../name}}, { page, limit });
+res.status(200).json(createResponse(true, "{{pascalCase ../name}} fetched successfully", result.data, result.pagination));
+{{else}}
 const data = await prisma.{{camelCase ../name}}.findMany();
 res.status(200).json(createResponse(true, "{{pascalCase ../name}} fetched successfully", data));
+{{/if}}
 } catch (error) {
 res.status(500).json(createResponse(false, (error as Error).message, null));
 }

@@ -1,7 +1,7 @@
 import { runCommand } from "../cli/cmdRunner.js";
 import { tsconfigTemplate } from "../templates/config.template.js";
 import { generateFromTemplate } from "../lib/utilityFunctions/codeGeneratorFromTemplate.js";
-import { AppConfig, AuthFeatureSchema } from "../lib/types.js";
+import { AppConfig, AuthFeatureSchema, CrudFeatureSchema } from "../lib/types.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { OUTPUT_PATH } from "../engine/index.js";
@@ -21,6 +21,10 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
           // Check if auth is enabled for package.json generation
           const authFeature = config.features?.auth as AuthFeatureSchema | undefined;
           const authEnabled = authFeature?.enabled === true;
+
+          // Check if pagination is enabled
+          const crudFeature = config.features?.crud as CrudFeatureSchema | undefined;
+          const paginationEnabled = crudFeature?.pagination?.enabled === true;
           
           let outputPath = path.join(OUTPUT_PATH,"package.json");
 
@@ -101,6 +105,7 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
           await generateFromTemplate({
                templatePath: path.resolve(__dirname,"../templates/utils/apiResponse.ts.hbs"),
                outputPath,
+               context: { paginationEnabled },
           });
 
           return true;

@@ -115,6 +115,7 @@ The wizard will ask you:
 - Database provider (PostgreSQL, MySQL, MongoDB)
 - Database connection URL
 - Whether to enable CRUD generation
+- Whether to enable pagination and set page limit
 - Whether to enable JWT authentication
 - Whether to enable CORS
 
@@ -456,12 +457,15 @@ relations:
 
 ### `features` — Optional Features
 
-Enable features like CRUD generation and authentication.
+Enable features like CRUD generation, pagination, and authentication.
 
 ```yaml
 features:
   crud:
     enabled: true           # Enable CRUD code generation for all models
+    pagination:
+      enabled: true         # Enable paginated list responses
+      pageLimit: 10         # Default page size for list endpoints
 
   auth:
     enabled: true
@@ -472,6 +476,8 @@ features:
 | Feature | Option | Description |
 |---|---|---|
 | `crud` | `enabled` | Generates controller/service/route boilerplate for all API-enabled models |
+| `crud.pagination` | `enabled` | Enables pagination support on generated read/list endpoints |
+| `crud.pagination` | `pageLimit` | Default number of records per page when pagination is enabled |
 | `auth` | `enabled` | Adds authentication middleware |
 | `auth` | `strategy` | Auth method — only `"jwt"` supported currently |
 | `auth` | `userModel` | The model that holds `email` and `password` for login |
@@ -621,6 +627,9 @@ models:
 features:
   crud:
     enabled: true
+    pagination:
+      enabled: true
+      pageLimit: 10
   auth:
     enabled: true
     strategy: "jwt"
@@ -758,6 +767,9 @@ models:
 features:
   crud:
     enabled: true
+    pagination:
+      enabled: true
+      pageLimit: 20
 
 output:
   paths:
