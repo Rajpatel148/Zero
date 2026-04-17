@@ -183,6 +183,46 @@ program
                     initial: true,
                 },
                 {
+                    type: "confirm",
+                    name: "enableRateLimit",
+                    message: "Enable rate limiting?",
+                    initial: false,
+                },
+                {
+                    type: (_, values) => (values.enableRateLimit ? "number" : null),
+                    name: "rateLimitWindowMs",
+                    message: "Rate limit window (ms):",
+                    initial: 900000,
+                    validate: (value: number) => {
+                        if (!Number.isInteger(value)) return "Rate limit window must be an integer";
+                        if (value < 1) return "Rate limit window must be greater than 0";
+                        return true;
+                    },
+                },
+                {
+                    type: (_, values) => (values.enableRateLimit ? "number" : null),
+                    name: "rateLimitMax",
+                    message: "Max requests per window:",
+                    initial: 100,
+                    validate: (value: number) => {
+                        if (!Number.isInteger(value)) return "Max requests must be an integer";
+                        if (value < 1) return "Max requests must be greater than 0";
+                        return true;
+                    },
+                },
+                {
+                    type: (_, values) => (values.enableRateLimit ? "confirm" : null),
+                    name: "rateLimitStandardHeaders",
+                    message: "Use standard rate limit headers?",
+                    initial: true,
+                },
+                {
+                    type: (_, values) => (values.enableRateLimit ? "confirm" : null),
+                    name: "rateLimitLegacyHeaders",
+                    message: "Use legacy rate limit headers?",
+                    initial: false,
+                },
+                {
                     type: (prev: boolean) => (prev ? "text" : null),
                     name: "corsOrigin",
                     message: "CORS origin:",
@@ -241,6 +281,15 @@ program
                         enabled: answers.enableCors,
                         origin: answers.enableCors ? (answers.corsOrigin || "*") : "",
                     },
+                    ...(answers.enableRateLimit ? {
+                        rateLimit: {
+                            enabled: true,
+                            windowMs: answers.rateLimitWindowMs,
+                            max: answers.rateLimitMax,
+                            standardHeaders: answers.rateLimitStandardHeaders,
+                            legacyHeaders: answers.rateLimitLegacyHeaders,
+                        },
+                    } : {}),
                 },
                 env: {
                     development: {

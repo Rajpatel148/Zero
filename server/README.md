@@ -118,6 +118,7 @@ The wizard will ask you:
 - Whether to enable pagination and set page limit
 - Whether to enable JWT authentication
 - Whether to enable CORS
+- Whether to enable rate limiting
 
 At the end, it writes a ready-to-use `config.yaml` in your current directory.
 
@@ -503,6 +504,26 @@ security:
 | `jwtSecret` | JWT signing secret. **Never hardcode this** — use `"${JWT_SECRET}"` to load from environment |
 | `cors.enabled` | Whether to allow cross-origin requests |
 | `cors.origin` | The allowed origin(s). `"*"` allows any. Use a specific domain in production |
+
+Rate limiting is optional and can be enabled under the same section:
+
+```yaml
+security:
+  rateLimit:
+    enabled: true
+    windowMs: 900000
+    max: 100
+    standardHeaders: true
+    legacyHeaders: false
+```
+
+| Field | Description |
+|---|---|
+| `rateLimit.enabled` | Turns rate limiting on or off |
+| `rateLimit.windowMs` | Time window in milliseconds for the request counter |
+| `rateLimit.max` | Maximum number of requests allowed per window |
+| `rateLimit.standardHeaders` | Sends the standard rate-limit headers when enabled |
+| `rateLimit.legacyHeaders` | Sends legacy `X-RateLimit-*` headers when enabled |
 
 > ⚠️ **Security:** Always use an environment variable placeholder like `"${JWT_SECRET}"` for secrets in your config file. Never commit real secrets to version control.
 

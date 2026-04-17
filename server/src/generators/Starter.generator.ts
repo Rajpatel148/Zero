@@ -21,6 +21,12 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
           // Check if auth is enabled for package.json generation
           const authFeature = config.features?.auth as AuthFeatureSchema | undefined;
           const authEnabled = authFeature?.enabled === true;
+          const rateLimitFeature = config.security?.rateLimit;
+          const rateLimitEnabled = rateLimitFeature?.enabled === true;
+          const rateLimitWindowMs = rateLimitFeature?.windowMs ?? 15 * 60 * 1000;
+          const rateLimitMax = rateLimitFeature?.max ?? 100;
+          const rateLimitStandardHeaders = rateLimitFeature?.standardHeaders ?? true;
+          const rateLimitLegacyHeaders = rateLimitFeature?.legacyHeaders ?? false;
 
           // Check if pagination is enabled
           const crudFeature = config.features?.crud as CrudFeatureSchema | undefined;
@@ -31,7 +37,7 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
           await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/package.json.hbs"),
                outputPath,
-               context: { authEnabled },
+               context: { authEnabled, rateLimitEnabled },
           });
 
           
@@ -63,7 +69,15 @@ export const starterGenerator = async ({ config }: starterGeneratorPrms): Promis
           await generateFromTemplate({
                templatePath: path.resolve(__dirname, "../templates/app.ts.hbs"),
                outputPath,
-               context:config
+               context: {
+                    ...config,
+                    authEnabled,
+                    rateLimitEnabled,
+                    rateLimitWindowMs,
+                    rateLimitMax,
+                    rateLimitStandardHeaders,
+                    rateLimitLegacyHeaders,
+               }
           });
 
           //make prisma Instance file

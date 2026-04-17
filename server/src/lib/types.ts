@@ -68,6 +68,13 @@ export interface SecurityConfig {
           enabled?: boolean;
           origin?: string;
      };
+     rateLimit?: {
+          enabled?: boolean;
+          windowMs?: number;
+          max?: number;
+          standardHeaders?: boolean;
+          legacyHeaders?: boolean;
+     };
 }
 
 export interface AppConfig {

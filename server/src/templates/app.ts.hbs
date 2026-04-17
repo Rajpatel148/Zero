@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
+{{#if rateLimitEnabled}}
+import rateLimit from 'express-rate-limit';
+{{/if}}
 import { createResponse } from './utils/apiResponse';
 {{#if (or features.crud.enabled features.auth.enabled)}}
 import router from './{{output.paths.routes}}';
@@ -25,6 +28,18 @@ return compression.filter(req, res);
 },
 }),
 );
+
+{{#if rateLimitEnabled}}
+// Apply rate limiting middleware
+app.use(
+rateLimit({
+windowMs: {{rateLimitWindowMs}},
+limit: {{rateLimitMax}},
+standardHeaders: {{rateLimitStandardHeaders}},
+legacyHeaders: {{rateLimitLegacyHeaders}},
+}),
+);
+{{/if}}
 
 app.get('/health', (req, res) => {
 res.status(200).json(createResponse(true, "Server is still healthly and running", null))
