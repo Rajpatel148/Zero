@@ -176,6 +176,18 @@ export const fileSchema = {
                          },
                          additionalProperties: true,
                     },
+                    rateLimit: {
+                         type: "object",
+                         properties: {
+                              enabled: { type: "boolean" },
+                              windowMs: { type: "integer" },
+                              max: { type: "integer" },
+                              standardHeaders: { type: "boolean" },
+                              legacyHeaders: { type: "boolean" },
+                         },
+                         required: ["enabled"],
+                         additionalProperties: true,
+                    },
                },
                additionalProperties: true,
           },
